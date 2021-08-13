@@ -1,0 +1,39 @@
+name: "codeql"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  analyze:
+    name: analyze
+    runs-on: ubuntu-20.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
+    steps:
+    - name: repository - checkout
+      uses: actions/checkout@v2
+
+    - name: codeql - initialize
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: codeql - autobuild
+      uses: github/codeql-action/autobuild@v1
+
+
+    - name: codeql - analyze
+      uses: github/codeql-action/analyze@v1
