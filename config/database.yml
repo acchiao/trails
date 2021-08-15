@@ -78,9 +78,18 @@ test:
 #
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
-#
+
 production:
   <<: *default
-  database: trails_production
-  username: trails
+  database: <%= ENV['TRAILS_DATABASE_NAME'] %>
+  username: <%= ENV['TRAILS_DATABASE_USERNAME'] %>
   password: <%= ENV['TRAILS_DATABASE_PASSWORD'] %>
+  url: <%= ENV['TRAILS_DATABASE_URL'] %>
+
+staging:
+  <<: *default
+  database: <%= ENV['TRAILS_DATABASE_NAME'] %>
+  username: <%= ENV['TRAILS_DATABASE_USERNAME'] %>
+  password: <%= ENV['TRAILS_DATABASE_PASSWORD'] %>
+  url: <%= ENV['TRAILS_DATABASE_URL'] %>
+

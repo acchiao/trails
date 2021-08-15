@@ -23,6 +23,7 @@ tmp/*
 config/master.key
 config/credentials/development.key
 config/credentials/production.key
+config/credentials/staging.key
 docker-compose.override.yml
 yarn-error.log
 yarn-debug.log*

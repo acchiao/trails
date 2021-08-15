@@ -72,7 +72,6 @@ development:
     watch_options:
       ignored: '**/node_modules/**'
 
-
 test:
   <<: *default
   compile: true
@@ -90,4 +89,10 @@ production:
   extract_css: true
 
   # Cache manifest.json for performance
+  cache_manifest: true
+
+staging:
+  <<: *default
+  compile: false
+  extract_css: true
   cache_manifest: true
