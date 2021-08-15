@@ -1,0 +1,28 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-rake
+  - rubocop-rails
+
+AllCops:
+  CacheRootDirectory: tmp
+  Exclude:
+    - '.git/**/*'
+    - 'bin/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+  NewCops: enable
+  SuggestExtensions: false
+  TargetRailsVersion: 6.1
+  TargetRubyVersion: 3.0
+  UseCache: true
+
+Layout/ClassStructure:
+  Enabled: true
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
+
+Layout/RedundantLineBreak:
+  Enabled: true
