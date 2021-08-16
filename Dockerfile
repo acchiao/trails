@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM ruby:3.0.2-slim-buster as webpacker
 
 WORKDIR /app
@@ -20,13 +21,17 @@ RUN apt-get update \
       && curl -sSL https://deb.nodesource.com/setup_14.x | bash - \
       && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
       && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-      && apt-get update && apt-get install --yes --no-install-recommends \
+      && apt-get update \
+      && apt-get install --yes --no-install-recommends \
         nodejs \
         yarn \
-      && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
-      && apt-get clean
+      && rm -rf \
+        /var/lib/apt/lists/* \
+        /usr/share/doc \
+        /usr/share/man
 
-RUN gem install bundler --no-document --version 2.2.25
+RUN gem update --system --no-document \
+      && gem install bundler --no-document --version 2.2.25
 
 COPY Gemfile Gemfile.lock /app/
 RUN bundle config set deployment 'true' \
@@ -41,7 +46,8 @@ COPY . /app/
 
 RUN RAILS_SERVE_STATIC_FILES=enabled \
       SECRET_KEY_BASE=proxy \
-      bundle exec rails assets:precompile
+      bundle exec rails assets:precompile \
+      && bundle exec bootsnap precompile --gemfile app/ lib/
 
 FROM ruby:3.0.2-slim-buster AS app
 
@@ -60,13 +66,18 @@ RUN apt-get update \
       && apt-get install --yes --no-install-recommends \
         build-essential \
         libpq-dev \
-      && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
-      && apt-get clean
+      && rm -rf \
+        /var/lib/apt/lists/* \
+        /usr/share/doc \
+        /usr/share/man
 
 COPY --from=webpacker /usr/local/bundle /usr/local/bundle
+COPY --from=webpacker /app/vendor /app/vendor
 COPY --from=webpacker /app/public /app/public
+COPY --from=webpacker /app/tmp /app/tmp
+
 COPY . /app/
 
 EXPOSE 3000
 
-CMD ["rails", "server", "-p", "3000"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
