@@ -38,8 +38,7 @@ jobs:
         id: meta
         with:
           images: |
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/trails
-            ghcr.io/${{ secrets.GHCR_USERNAME }}/trails
+            ${{ secrets.DOCKERHUB_USERNAME }}/trails
           tags: |
             type=ref,event=branch
             type=ref,event=pr
