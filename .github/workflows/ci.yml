@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -6,35 +6,33 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: github/super-linter@v4
+        continue-on-error: true
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
     name: Build
     runs-on: ubuntu-20.04
+    needs: lint
     environment: default
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set Up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set Up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub Container Registry
-        uses: docker/login-action@v1
+      - uses: actions/checkout@v2
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set Up Metadata
-        uses: docker/metadata-action@v3
+      - uses: docker/metadata-action@v3
         id: meta
         with:
           images: |
@@ -48,10 +46,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{version}}
             type=sha
-
-      - name: Build Docker Image
+      - uses: docker/build-push-action@v2
         id: build
-        uses: docker/build-push-action@v2
         with:
           context: .
           file: Dockerfile
@@ -61,29 +57,12 @@ jobs:
           cache-to: type=registry,ref=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/trails:buildcache,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Image Digest
-        run: echo ${{ steps.build.outputs.digest }}
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Lint Codebase
-        uses: github/super-linter@v4
-        continue-on-error: true
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo ${{ steps.build.outputs.digest }}
 
   analyze:
     name: Analyze
     runs-on: ubuntu-20.04
+    needs: build
     environment: default
     permissions:
       actions: read
@@ -94,16 +73,33 @@ jobs:
       matrix:
         language: [ 'javascript' ]
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+      - uses: actions/checkout@v2
+      - uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
+      - uses: github/codeql-action/autobuild@v1
+      - uses: github/codeql-action/analyze@v1
 
-      - name: Run Autobuild
-        uses: github/codeql-action/autobuild@v1
+  release:
+    name: Release
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        with:
+          release-type: simple
+          package-name: release-please-action
 
-      - name: Run CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+  explore:
+    name: Explore
+    runs-on: ubuntu-20.04
+    needs: lint
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - uses: actions/checkout@v2
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - run: |
+          ls ${{ github.workspace }}
+      - run: echo "🍏 This job's status is ${{ job.status }}."
