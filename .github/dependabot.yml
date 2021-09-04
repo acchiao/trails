@@ -1,4 +1,10 @@
 version: 2
+registries:
+  dockerhub:
+    type: docker-registry
+    url: registry.hub.docker.com
+    username: ${{ secrets.REGISTRY_USERNAME }}
+    password: ${{ secrets.REGISTRY_TOKEN }}
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
