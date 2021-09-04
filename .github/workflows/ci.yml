@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: 0 0 * * *
   workflow_dispatch:
 
 concurrency:
@@ -79,7 +81,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript' ]
+        language: [ javascript ]
     steps:
       - uses: actions/checkout@v2
       - uses: github/codeql-action/init@v1
@@ -105,7 +107,7 @@ jobs:
     - run: |
         gem install brakeman --version $BRAKEMAN_VERSION
       env:
-        BRAKEMAN_VERSION: '5.1'
+        BRAKEMAN_VERSION: 5.1
     - run: |
         brakeman -f sarif -o output.sarif.json .
       continue-on-error: true
