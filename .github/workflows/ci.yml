@@ -59,8 +59,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - run: echo ${{ steps.build.outputs.digest }}
 
-  analyze:
-    name: Analyze
+  codeql:
+    name: CodeQL
     runs-on: ubuntu-20.04
     needs: [lint, build]
     environment: default
@@ -80,10 +80,35 @@ jobs:
       - uses: github/codeql-action/autobuild@v1
       - uses: github/codeql-action/analyze@v1
 
+  brakeman:
+    name: Brakeman
+    runs-on: ubuntu-20.04
+    needs: [lint, build]
+    environment: default
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+    - run: |
+        gem install brakeman --version $BRAKEMAN_VERSION
+      env:
+        BRAKEMAN_VERSION: '5.1'
+    - run: |
+        brakeman -f sarif -o output.sarif.json .
+      continue-on-error: true
+    - uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: output.sarif.json
+
   release:
     name: Release
     runs-on: ubuntu-20.04
-    needs: [lint, build, analyze]
+    needs: [lint, build, codeql, brakeman]
     steps:
       - uses: GoogleCloudPlatform/release-please-action@v2
         with:
