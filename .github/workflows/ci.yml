@@ -17,6 +17,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-20.04
+    environment: default
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,6 +31,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
+    environment: default
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-qemu-action@v1
@@ -115,6 +117,7 @@ jobs:
     name: Release
     runs-on: ubuntu-20.04
     needs: [build, codeql, brakeman]
+    environment: default
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: GoogleCloudPlatform/release-please-action@v2
