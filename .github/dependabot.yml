@@ -4,15 +4,20 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 10
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 10
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 10
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 10
+
