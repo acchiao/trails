@@ -29,7 +29,6 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           DISABLE_ERRORS: true
-          RUBY_CONFIG_FILE: .rubocop.yml
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
