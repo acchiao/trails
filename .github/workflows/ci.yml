@@ -64,8 +64,8 @@ jobs:
           file: Dockerfile
           push: true
           target: app
-          cache-from: type=registry,ref=docker.io/${{ secrets.REGISTRY_USERNAME }}/trails:buildcache
-          cache-to: type=registry,ref=docker.io/${{ secrets.REGISTRY_USERNAME }}/trails:buildcache,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - run: echo ${{ steps.build.outputs.digest }}
