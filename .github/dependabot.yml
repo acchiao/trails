@@ -1,10 +1,4 @@
 version: 2
-registries:
-  dockerhub:
-    type: docker-registry
-    url: https://registry.hub.docker.com
-    username: ${{ secrets.REGISTRY_USERNAME }}
-    password: ${{ secrets.REGISTRY_TOKEN }}
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -15,8 +9,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    registries:
-      - dockerhub
     open-pull-requests-limit: 10
   - package-ecosystem: "bundler"
     directory: "/"
