@@ -36,7 +36,9 @@ jobs:
       fail-fast: false
       matrix:
         environment: [staging, production]
-    environment: ${{ matrix.environment }}
+    environment:
+      name: ${{ matrix.environment }}
+      url: https://localhost:3000
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-qemu-action@v1
