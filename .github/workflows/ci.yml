@@ -19,7 +19,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-20.04
-    environment: default
     steps:
       - uses: actions/checkout@v2
         with:
@@ -34,7 +33,10 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
-    environment: default
+    strategy:
+      matrix:
+        environment: [staging, production]
+    environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-qemu-action@v1
@@ -72,7 +74,7 @@ jobs:
           context: .
           file: Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
-          target: app
+          target: ${{ matrix.environment }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
@@ -83,7 +85,6 @@ jobs:
     name: CodeQL
     runs-on: ubuntu-20.04
     needs: [build]
-    environment: default
     permissions:
       actions: read
       contents: read
@@ -104,7 +105,6 @@ jobs:
     name: Brakeman
     runs-on: ubuntu-20.04
     needs: [build]
-    environment: default
     permissions:
       actions: read
       contents: read
@@ -129,7 +129,6 @@ jobs:
     name: Release
     runs-on: ubuntu-20.04
     needs: [build, codeql, brakeman]
-    environment: default
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: GoogleCloudPlatform/release-please-action@v2
