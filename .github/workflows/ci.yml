@@ -49,7 +49,7 @@ jobs:
         id: meta
         with:
           images: |
-            registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/trails
+            registry.hub.docker.com/acchiao/trails
           flavor: |
             latest=true
             prefix=
