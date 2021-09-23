@@ -33,6 +33,7 @@ jobs:
     name: Build
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
         environment: [staging, production]
     environment: ${{ matrix.environment }}
@@ -49,6 +50,8 @@ jobs:
           password: ${{ secrets.REGISTRY_TOKEN }}
       - uses: docker/metadata-action@v3
         id: meta
+        if: ${{ github.ref == 'refs/heads/main' }}
+        # if: ${{ github.event_name != 'pull_request' }}
         with:
           images: |
             acchiao/trails
@@ -86,7 +89,7 @@ jobs:
   codeql:
     name: CodeQL
     runs-on: ubuntu-20.04
-    needs: [build]
+    # needs: [build]
     permissions:
       actions: read
       contents: read
@@ -106,7 +109,7 @@ jobs:
   brakeman:
     name: Brakeman
     runs-on: ubuntu-20.04
-    needs: [build]
+    # needs: [build]
     permissions:
       actions: read
       contents: read
@@ -131,8 +134,7 @@ jobs:
     name: Release
     runs-on: ubuntu-20.04
     needs: [build, codeql, brakeman]
-    if: ${{ github.ref == 'refs/heads/main' }}
-    # if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: GoogleCloudPlatform/release-please-action@v2
         with:
