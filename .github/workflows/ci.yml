@@ -54,7 +54,7 @@ jobs:
         # if: ${{ github.event_name != 'pull_request' }}
         with:
           images: |
-            acchiao/trails
+            registry.hub.docker.com/acchiao/trails
           flavor: |
             latest=true
             prefix=
