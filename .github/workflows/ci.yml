@@ -148,7 +148,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.0
-    - run: bundle add code-scanning-rubocop --version 0.3.0 --skip-install
+    - run: bundle add code-scanning-rubocop --skip-install
     - run: bundle install
     - run: |
         bash -c "
