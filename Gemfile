@@ -7,16 +7,16 @@ ruby '3.0.2'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '~> 1.1'
-gem 'puma', '~> 5.0'
+gem 'puma', '~> 5.5', '>= 5.5.1'
 gem 'rails', '~> 6.1.4'
 gem 'redis', '~> 4.0'
-gem 'sass-rails', '>= 6'
+gem 'sass-rails', '>= 6.0.0'
 gem 'turbolinks', '~> 5'
-gem 'webpacker', '~> 5.0'
+gem 'webpacker', '~> 5.4', '>= 5.4.0'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 5.0.2'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
@@ -31,7 +31,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '>= 3.26'
+  gem 'capybara', '>= 3.35.3'
   gem 'selenium-webdriver'
-  gem 'webdrivers'
+  gem 'webdrivers', '>= 4.6.1'
 end
