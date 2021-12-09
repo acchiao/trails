@@ -120,6 +120,7 @@ jobs:
       with:
         ruby-version: 3.0
     - run: |
+        wget -qO- https://ipecho.net/plain ; echo
         gem install brakeman --version $BRAKEMAN_VERSION
       env:
         BRAKEMAN_VERSION: 5.1
