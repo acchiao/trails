@@ -31,7 +31,7 @@ RUN apt-get update \
         /usr/share/man
 
 RUN gem update --system --no-document \
-      && gem install bundler --no-document --version 2.2.25
+      && gem install bundler --no-document --version 2.3.4
 
 COPY Gemfile Gemfile.lock /app/
 RUN bundle config set deployment 'true' \
