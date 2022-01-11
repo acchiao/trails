@@ -123,7 +123,7 @@ jobs:
         wget -qO- https://ipecho.net/plain ; echo
         gem install brakeman --version $BRAKEMAN_VERSION
       env:
-        BRAKEMAN_VERSION: 5.1
+        BRAKEMAN_VERSION: 5.2
     - run: |
         brakeman -f sarif -o output.sarif.json .
       continue-on-error: true
