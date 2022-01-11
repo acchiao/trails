@@ -118,7 +118,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.0
+        ruby-version: 3.1
     - run: |
         wget -qO- https://ipecho.net/plain ; echo
         gem install brakeman --version $BRAKEMAN_VERSION
@@ -135,7 +135,7 @@ jobs:
         name: output.sarif.json
         path: output.sarif.json
         if-no-files-found: warn
-        retention-days: 0
+        retention-days: 90
 
   rubocop:
     name: RuboCop
@@ -162,7 +162,7 @@ jobs:
         name: rubocop.sarif
         path: rubocop.sarif
         if-no-files-found: warn
-        retention-days: 0
+        retention-days: 90
 
   release:
     name: Release
