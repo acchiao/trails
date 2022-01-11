@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ruby:3.0.2-slim-buster as webpacker
+FROM ruby:3.1.0-slim-buster as webpacker
 
 WORKDIR /app
 
