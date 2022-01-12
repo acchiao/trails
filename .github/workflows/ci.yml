@@ -89,6 +89,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - uses: azure/container-scan@v0.1
+        continue-on-error: true
         with:
           image-name: registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
           severity-threshold: medium
