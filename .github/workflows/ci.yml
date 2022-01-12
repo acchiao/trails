@@ -13,6 +13,9 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: false
 
+env:
+  PROJECT_NAME: trails
+
 jobs:
   lint:
     name: Lint
@@ -55,7 +58,7 @@ jobs:
         # if: ${{ github.event_name != 'pull_request' }}
         with:
           images: |
-            registry.hub.docker.com/acchiao/trails
+            registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}
           flavor: |
             latest=true
             prefix=
@@ -81,23 +84,15 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           # push: ${{ github.event_name != 'pull_request' }}
           target: ${{ matrix.environment }}
-          cache-from: type=registry,ref=registry.hub.docker.com/acchiao/trails:buildcache
-          cache-to: type=registry,ref=registry.hub.docker.com/acchiao/trails:buildcache,mode=max
+          cache-from: type=registry,ref=registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}:buildcache
+          cache-to: type=registry,ref=registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}:buildcache,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - uses: anchore/scan-action@v3
-        id: anchore-scan
+      - uses: azure/container-scan@v0.1
         with:
-          image: registry.hub.docker.com/acchiao/trails:${{ github.sha }}
-          acs-report-enable: true
-          severity-cutoff: high
-          fail-build: false
-      - uses: github/codeql-action/upload-sarif@v1
-        if: always()
-        with:
-          sarif_file: ${{ steps.anchore-scan.outputs.sarif }}
-          if-no-files-found: warn
-          retention-days: 90
+          image-name: registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+          severity-threshold: medium
+          run-quality-checks: true
       - run: echo ${{ steps.build.outputs.digest }}
 
   codeql:
@@ -185,7 +180,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     # if: ${{ github.event_name != 'pull_request' }}
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v3
+      - uses: googlecloudplatform/release-please-action@v3
         with:
           release-type: simple
           package-name: release-please-action
