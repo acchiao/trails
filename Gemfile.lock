@@ -258,26 +258,26 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
-  capybara (>= 3.26)
+  capybara (>= 3.35.3)
   jbuilder (~> 2.7)
   listen (~> 3.3)
   pg (~> 1.1)
-  puma (~> 5.0)
+  puma (~> 5.5, >= 5.5.1)
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.4)
   redis (~> 4.0)
-  rspec-rails
+  rspec-rails (>= 5.0.2)
   rubocop
   rubocop-performance
   rubocop-rails
   rubocop-rake
   rubocop-rspec
-  sass-rails (>= 6)
+  sass-rails (>= 6.0.0)
   selenium-webdriver
   turbolinks (~> 5)
   web-console (>= 4.1.0)
-  webdrivers
-  webpacker (~> 5.0)
+  webdrivers (>= 4.6.1)
+  webpacker (~> 5.4, >= 5.4.0)
 
 RUBY VERSION
    ruby 3.1.0p0
