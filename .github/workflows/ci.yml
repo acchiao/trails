@@ -23,8 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           persist-credentials: false
+          fetch-depth: 0
       - uses: docker://ghcr.io/github/super-linter:slim-v4
         env:
           DEFAULT_BRANCH: main
@@ -144,29 +144,29 @@ jobs:
       contents: read
       security-events: write
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           persist-credentials: false
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.1
-    - run: |
-        wget -qO- https://ipecho.net/plain ; echo
-        gem install brakeman --version $BRAKEMAN_VERSION
-      env:
-        BRAKEMAN_VERSION: 5.2
-    - run: |
-        brakeman -f sarif -o output.sarif.json .
-      continue-on-error: true
-    - uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: output.sarif.json
-    # - uses: actions/upload-artifact@v2
-    #   with:
-    #     name: output.sarif.json
-    #     path: output.sarif.json
-    #     if-no-files-found: warn
-    #     retention-days: 90
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+      - run: |
+          wget -qO- https://ipecho.net/plain ; echo
+          gem install brakeman --version $BRAKEMAN_VERSION
+        env:
+          BRAKEMAN_VERSION: 5.2
+      - run: |
+          brakeman -f sarif -o output.sarif.json .
+        continue-on-error: true
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: output.sarif.json
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: output.sarif.json
+      #     path: output.sarif.json
+      #     if-no-files-found: warn
+      #     retention-days: 90
 
   rubocop:
     name: RuboCop
@@ -174,28 +174,28 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           persist-credentials: false
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.1
-    - run: bundle add code-scanning-rubocop --skip-install
-    - run: bundle install
-    - run: |
-        bash -c "
-          bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o rubocop.sarif
-          [[ $? -ne 2 ]]
-        "
-    - uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: rubocop.sarif
-    # - uses: actions/upload-artifact@v2
-    #   with:
-    #     name: rubocop.sarif
-    #     path: rubocop.sarif
-    #     if-no-files-found: warn
-    #     retention-days: 90
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+      - run: bundle add code-scanning-rubocop --skip-install
+      - run: bundle install
+      - run: |
+          bash -c "
+            bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o rubocop.sarif
+            [[ $? -ne 2 ]]
+          "
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: rubocop.sarif
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: rubocop.sarif
+      #     path: rubocop.sarif
+      #     if-no-files-found: warn
+      #     retention-days: 90
 
   release:
     name: Release
