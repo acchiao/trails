@@ -46,12 +46,13 @@ jobs:
       - run: |
           helm lint charts/trails
           helm install test charts/trails
-      - run: |
+      - name: kube-score
+        run: |
           helm template charts/trails > template.yaml
           wget --no-verbose --show-progress --progress dot:giga https://github.com/zegl/kube-score/releases/download/v1.13.0/kube-score_1.13.0_linux_amd64.tar.gz
           echo "e8b739c932ff8505ba80bb58e4e1a244c79caa9816f3db78171253634114c022  kube-score_1.13.0_linux_amd64.tar.gz" | sha256sum --check
           tar xf kube-score_1.13.0_linux_amd64.tar.gz
-          ./kube-score score --output-format ci --kubernetes-version 1.22 ${{ steps.bake.outputs.manifestsBundle }}
+          ./kube-score score --output-format ci --kubernetes-version 1.22 template.yaml
 
   build:
     name: Build
