@@ -140,12 +140,12 @@ jobs:
     - uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: output.sarif.json
-    - uses: actions/upload-artifact@v2
-      with:
-        name: output.sarif.json
-        path: output.sarif.json
-        if-no-files-found: warn
-        retention-days: 90
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: output.sarif.json
+    #     path: output.sarif.json
+    #     if-no-files-found: warn
+    #     retention-days: 90
 
   rubocop:
     name: RuboCop
@@ -167,12 +167,12 @@ jobs:
     - uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: rubocop.sarif
-    - uses: actions/upload-artifact@v2
-      with:
-        name: rubocop.sarif
-        path: rubocop.sarif
-        if-no-files-found: warn
-        retention-days: 90
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: rubocop.sarif
+    #     path: rubocop.sarif
+    #     if-no-files-found: warn
+    #     retention-days: 90
 
   release:
     name: Release
