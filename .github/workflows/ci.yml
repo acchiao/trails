@@ -45,6 +45,15 @@ jobs:
       - run: helm lint charts/trails
       - uses: helm/kind-action@v1.2.0
       - run: helm install test charts/trails
+      - uses: azure/k8s-bake@v1
+        id: bake
+        with:
+          renderEngine: helm
+          helmChart: charts/trails
+          overrideFiles:
+          overrides: |
+            replicas:2
+          helm-version: 3.8.0
 
   build:
     name: Build
@@ -151,7 +160,6 @@ jobs:
         with:
           ruby-version: 3.1
       - run: |
-          wget -qO- https://ipecho.net/plain ; echo
           gem install brakeman --version $BRAKEMAN_VERSION
         env:
           BRAKEMAN_VERSION: 5.2
