@@ -53,7 +53,11 @@ jobs:
           overrideFiles:
           overrides: |
             replicas:2
-          helm-version: 3.8.0
+      - run: |
+          wget --no-verbose --show-progress --progress dot:giga https://github.com/zegl/kube-score/releases/download/v1.13.0/kube-score_1.13.0_linux_amd64.tar.gz
+          echo "e8b739c932ff8505ba80bb58e4e1a244c79caa9816f3db78171253634114c022  kube-score_1.13.0_linux_amd64.tar.gz" | sha256sum --check
+          tar xf kube-score_1.13.0_linux_amd64.tar.gz
+          ./kube-score score ${{ steps.bake.outputs.manifestsBundle }}
 
   build:
     name: Build
