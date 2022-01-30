@@ -42,15 +42,16 @@ jobs:
       - uses: azure/setup-helm@v1
         with:
           version: 3.8.0
-      - run: helm lint charts/trails
       - uses: helm/kind-action@v1.2.0
-      - run: helm install test charts/trails
+      - run: |
+          helm lint charts/trails
+          helm install test charts/trails
       - run: |
           helm template charts/trails > template.yaml
           wget --no-verbose --show-progress --progress dot:giga https://github.com/zegl/kube-score/releases/download/v1.13.0/kube-score_1.13.0_linux_amd64.tar.gz
           echo "e8b739c932ff8505ba80bb58e4e1a244c79caa9816f3db78171253634114c022  kube-score_1.13.0_linux_amd64.tar.gz" | sha256sum --check
           tar xf kube-score_1.13.0_linux_amd64.tar.gz
-          ./kube-score score template.yaml
+          ./kube-score score --output-format ci --kubernetes-version 1.22 ${{ steps.bake.outputs.manifestsBundle }}
 
   build:
     name: Build
@@ -158,14 +159,12 @@ jobs:
           ruby-version: 3.1
       - run: |
           gem install brakeman --version $BRAKEMAN_VERSION
+          brakeman --format sarif --output output.sarif.json .
         env:
-          BRAKEMAN_VERSION: 5.2
-      - run: |
-          brakeman -f sarif -o output.sarif.json .
-        continue-on-error: true
-      - uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: output.sarif.json
+          BRAKEMAN_VERSION: 5.2.1
+      # - uses: github/codeql-action/upload-sarif@v1
+      #   with:
+      #     sarif_file: output.sarif.json
       # - uses: actions/upload-artifact@v2
       #   with:
       #     name: output.sarif.json
@@ -185,16 +184,16 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
-      - run: bundle add code-scanning-rubocop --skip-install
-      - run: bundle install
       - run: |
+          bundle add code-scanning-rubocop --skip-install
+          bundle install
           bash -c "
             bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o rubocop.sarif
             [[ $? -ne 2 ]]
           "
-      - uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: rubocop.sarif
+      # - uses: github/codeql-action/upload-sarif@v1
+      #   with:
+      #     sarif_file: rubocop.sarif
       # - uses: actions/upload-artifact@v2
       #   with:
       #     name: rubocop.sarif
