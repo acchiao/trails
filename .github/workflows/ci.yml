@@ -45,19 +45,12 @@ jobs:
       - run: helm lint charts/trails
       - uses: helm/kind-action@v1.2.0
       - run: helm install test charts/trails
-      - uses: azure/k8s-bake@v1
-        id: bake
-        with:
-          renderEngine: helm
-          helmChart: charts/trails
-          overrideFiles:
-          overrides: |
-            replicas:2
       - run: |
+          helm template charts/trails > template.yaml
           wget --no-verbose --show-progress --progress dot:giga https://github.com/zegl/kube-score/releases/download/v1.13.0/kube-score_1.13.0_linux_amd64.tar.gz
           echo "e8b739c932ff8505ba80bb58e4e1a244c79caa9816f3db78171253634114c022  kube-score_1.13.0_linux_amd64.tar.gz" | sha256sum --check
           tar xf kube-score_1.13.0_linux_amd64.tar.gz
-          ./kube-score score ${{ steps.bake.outputs.manifestsBundle }}
+          ./kube-score score template.yaml
 
   build:
     name: Build
