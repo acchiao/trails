@@ -26,7 +26,7 @@ end
 
 group :development do
   gem 'listen', '~> 3.7'
-  gem 'rack-mini-profiler', '~> 2.3'
+  gem 'rack-mini-profiler', '~> 3.0'
   gem 'web-console', '~> 4.2'
 end
 
