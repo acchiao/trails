@@ -47,6 +47,7 @@ jobs:
           helm lint charts/trails
           helm install test charts/trails
       - name: kube-score
+        continue-on-error: true
         run: |
           helm template charts/trails > template.yaml
           wget --no-verbose --show-progress --progress dot:giga https://github.com/zegl/kube-score/releases/download/v1.13.0/kube-score_1.13.0_linux_amd64.tar.gz
@@ -183,8 +184,6 @@ jobs:
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
       - run: |
           bundle add code-scanning-rubocop --skip-install
           bundle install
