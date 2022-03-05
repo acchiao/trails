@@ -206,7 +206,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-20.04
-    needs: [build, codeql, brakeman]
+    needs: [build, codeql, brakeman, rubocop, manifests, lint]
     if: ${{ github.ref == 'refs/heads/main' }}
     # if: ${{ github.event_name != 'pull_request' }}
     steps:
