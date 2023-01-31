@@ -102,7 +102,7 @@ jobs:
             type=sha,prefix=,suffix=,format=long
             type=sha,prefix=,suffix=,format=short
             type=raw,value=${{ matrix.environment }}
-      - uses: docker/build-push-action@v2
+      - uses: docker/build-push-action@v4
         id: build
         with:
           context: .
