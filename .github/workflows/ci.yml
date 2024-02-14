@@ -78,7 +78,7 @@ jobs:
           registry: registry.hub.docker.com
           username: ${{ secrets.REGISTRY_NAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-      - uses: docker/metadata-action@v3
+      - uses: docker/metadata-action@v4
         id: meta
         if: ${{ github.ref == 'refs/heads/main' }}
         # if: ${{ github.event_name != 'pull_request' }}
