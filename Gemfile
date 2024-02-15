@@ -7,7 +7,7 @@ ruby '3.1.0'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '~> 1.1'
-gem 'puma', '~> 5.5', '>= 5.5.1'
+gem 'puma', '~> 6.4'
 gem 'rails', '~> 6.1.4'
 gem 'redis', '~> 4.0'
 gem 'sass-rails', '>= 6.0.0'
