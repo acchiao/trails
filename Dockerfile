@@ -14,21 +14,21 @@ ENV PATH=${TRAILS_HOME}/bin:${PATH}
 
 RUN apt-get update \
       && apt-get install --yes --no-install-recommends \
-        build-essential \
-        curl \
-        git \
-        libpq-dev \
-      && curl -sSL https://deb.nodesource.com/setup_16.x | bash - \
+      build-essential \
+      curl \
+      git \
+      libpq-dev \
+      && curl -sSL https://deb.nodesource.com/setup_18.x | bash - \
       && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
       && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
       && apt-get update \
       && apt-get install --yes --no-install-recommends \
-        nodejs \
-        yarn \
+      nodejs \
+      yarn \
       && rm -rf \
-        /var/lib/apt/lists/* \
-        /usr/share/doc \
-        /usr/share/man
+      /var/lib/apt/lists/* \
+      /usr/share/doc \
+      /usr/share/man
 
 RUN gem update --system --no-document \
       && gem install bundler --no-document --version 2.3.4
@@ -46,6 +46,7 @@ COPY . /app/
 
 RUN RAILS_SERVE_STATIC_FILES=enabled \
       SECRET_KEY_BASE=proxy \
+      NODE_OPTIONS=--openssl-legacy-provider \
       bundle exec rails assets:precompile \
       && bundle exec bootsnap precompile --gemfile app/ lib/
 
@@ -64,12 +65,12 @@ ENV PATH=${TRAILS_HOME}/bin:${PATH}
 
 RUN apt-get update \
       && apt-get install --yes --no-install-recommends \
-        build-essential \
-        libpq-dev \
+      build-essential \
+      libpq-dev \
       && rm -rf \
-        /var/lib/apt/lists/* \
-        /usr/share/doc \
-        /usr/share/man
+      /var/lib/apt/lists/* \
+      /usr/share/doc \
+      /usr/share/man
 
 COPY --from=webpacker /usr/local/bundle /usr/local/bundle
 COPY --from=webpacker /app/vendor /app/vendor
