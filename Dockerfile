@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ruby:3.1.0-slim-buster as webpacker
+FROM ruby:3.2.2-slim-buster as webpacker
 
 WORKDIR /app
 
@@ -50,7 +50,7 @@ RUN RAILS_SERVE_STATIC_FILES=enabled \
       bundle exec rails assets:precompile \
       && bundle exec bootsnap precompile --gemfile app/ lib/
 
-FROM ruby:3.1.0-slim-buster AS app
+FROM ruby:3.2.2-slim-buster AS app
 
 WORKDIR /app
 
