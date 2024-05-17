@@ -14,7 +14,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -29,7 +29,7 @@ jobs:
     name: Manifests
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           persist-credentials: false
       - uses: azure/setup-helm@v4.1.0
@@ -59,7 +59,7 @@ jobs:
       name: ${{ matrix.environment }}
       url: https://localhost:3000
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           persist-credentials: false
       - uses: docker/setup-qemu-action@v3.0.0
@@ -117,7 +117,7 @@ jobs:
       matrix:
         language: [javascript]
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           persist-credentials: false
       - uses: github/codeql-action/init@v3
@@ -134,7 +134,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.173.0
@@ -161,7 +161,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.6
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.173.0
