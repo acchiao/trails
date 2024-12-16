@@ -18,7 +18,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: super-linter/super-linter@v7.1.0
+      - uses: super-linter/super-linter@v7.2.1
         env:
           DEFAULT_BRANCH: main
           DISABLE_ERRORS: true
