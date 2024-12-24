@@ -29,11 +29,11 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           DISABLE_ERRORS: true
-          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_ALL_CODEBASE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  manifests:
-    name: Manifests
+  kubernetes:
+    name: Kubernetes
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.2.2
