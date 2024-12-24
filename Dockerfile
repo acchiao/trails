@@ -1,4 +1,5 @@
 # syntax=docker.io/docker/dockerfile:1
+# hadolint global ignore=DL3008
 FROM ruby:3.1.0-slim-buster AS webpacker
 
 ARG RAILS_ENV=production
