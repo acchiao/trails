@@ -92,4 +92,3 @@ staging:
   username: <%= ENV['TRAILS_DATABASE_USERNAME'] %>
   password: <%= ENV['TRAILS_DATABASE_PASSWORD'] %>
   url: <%= ENV['TRAILS_DATABASE_URL'] %>
-
