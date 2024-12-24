@@ -146,8 +146,8 @@ jobs:
           file: Dockerfile
           push: true
           target: ${{ matrix.environment }}
-          cache-from: type=registry,ref=ghcr.io/${{ env.PROJECT_NAME }}:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ github.actor }}/${{ env.PROJECT_NAME }}:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.actor }}/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}:buildcache,mode=max
           tags: ${{ steps.meta-ghcr.outputs.tags }}
           labels: ${{ steps.meta-ghcr.outputs.labels }}
       - run: echo ${{ steps.build-dockerhub.outputs.digest }}
