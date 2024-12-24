@@ -125,9 +125,9 @@ jobs:
       fail-fast: false
       matrix:
         environment: [development, test, staging, production]
-    environment:
-      name: ${{ matrix.environment }}
-      url: https://localhost:3000
+    # environment:
+    #   name: ${{ matrix.environment }}
+    #   url: https://localhost:3000
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -177,7 +177,6 @@ jobs:
   codeql:
     name: CodeQL
     runs-on: ubuntu-24.04
-    # needs: [build]
     permissions:
       actions: read
       contents: read
@@ -209,16 +208,16 @@ jobs:
           bundler-cache: true
       - run: |
           gem install brakeman --version ${{ env.BRAKEMAN_VERSION }}
-          brakeman --format sarif --output output.sarif.json .
+          brakeman --format sarif --output brakeman.sarif.json .
         env:
           BRAKEMAN_VERSION: 5.2.1
       # - uses: github/codeql-action/upload-sarif@v3
       #   with:
-      #     sarif_file: output.sarif.json
-      # - uses: actions/upload-artifact@v4.3.1
+      #     sarif_file: brakeman.sarif.json
+      # - uses: actions/upload-artifact@v4.5.0
       #   with:
-      #     name: output.sarif.json
-      #     path: output.sarif.json
+      #     name: brakeman.sarif.json
+      #     path: brakeman.sarif.json
       #     if-no-files-found: warn
       #     retention-days: 90
 
