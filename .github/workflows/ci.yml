@@ -54,8 +54,8 @@ jobs:
           tar xf kube-score_1.19.0_linux_amd64.tar.gz
           helm template trails charts/trails --values charts/trails/ci.yaml --skip-tests | ./kube-score score - --output-format ci --kubernetes-version 1.32 --ignore-test deployment-has-poddisruptionbudget,deployment-has-host-podantiaffinity,container-security-context-user-group-id,pod-networkpolicy,pod-probes
 
-  build:
-    name: Build
+  dockerhub:
+    name: DockerHub
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -79,38 +79,11 @@ jobs:
           registry: registry.hub.docker.com
           username: ${{ secrets.REGISTRY_NAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-      - uses: docker/login-action@v3.3.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/metadata-action@v5.6.1
         id: meta-dockerhub
         with:
           images: |
             registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}
-          flavor: |
-            latest=true
-            prefix=
-            suffix=
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=ref,event=tag
-            type=schedule,pattern={{date 'YYYYMMDD'}}
-            type=semver,pattern=v{{version}}
-            type=semver,pattern={{raw}}
-            type=semver,pattern=v{{major}}
-            type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
-            type=sha,prefix=,suffix=,format=long
-            type=sha,prefix=,suffix=,format=short
-            type=raw,value=${{ matrix.environment }}
-      - uses: docker/metadata-action@v5.6.1
-        id: meta-ghcr
-        with:
-          images: |
-            gchr.io/acchiao/trails
           flavor: |
             latest=true
             prefix=
@@ -139,19 +112,7 @@ jobs:
           cache-to: type=registry,ref=registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}:buildcache,mode=max
           tags: ${{ steps.meta-dockerhub.outputs.tags }}
           labels: ${{ steps.meta-dockerhub.outputs.labels }}
-      - uses: docker/build-push-action@v6.10.0
-        id: build-ghcr
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          target: ${{ matrix.environment }}
-          cache-from: type=registry,ref=ghcr.io/acchiao/${{ env.PROJECT_NAME }}:buildcache
-          cache-to: type=registry,ref=ghcr.io/acchiao/${{ env.PROJECT_NAME }}:buildcache,mode=max
-          tags: ${{ steps.meta-ghcr.outputs.tags }}
-          labels: ${{ steps.meta-ghcr.outputs.labels }}
       - run: echo ${{ steps.build-dockerhub.outputs.digest }}
-      - run: echo ${{ steps.build-ghcr.outputs.digest }}
 
   ghcr:
     name: GHCR
