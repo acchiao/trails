@@ -109,7 +109,7 @@ jobs:
         id: meta-ghcr
         with:
           images: |
-            gchr.io/${{ github.actor }}/${{ env.PROJECT_NAME }}
+            gchr.io/acchiao/trails
           flavor: |
             latest=true
             prefix=
