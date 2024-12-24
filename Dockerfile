@@ -38,7 +38,7 @@ RUN bundle config set deployment 'true' \
       && bundle config set without 'development:test' \
       && bundle install --jobs $(nproc)
 
-COPY package.json yarn.lock ${PLATFORM_HOME}/
+COPY package.json yarn.lock ${TRAILS_HOME}/
 RUN yarn install --frozen-lockfile --check-files \
       && yarn cache clean
 
