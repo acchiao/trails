@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/acchiao/trails/compare/v1.0.0...v1.0.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* remove diff ([81a64ea](https://github.com/acchiao/trails/commit/81a64eadc442e204ef0187299541f47d48dacb66))
+
 ## 1.0.0 (2024-02-14)
 
 
