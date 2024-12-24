@@ -181,15 +181,3 @@ jobs:
       #     path: rubocop.sarif
       #     if-no-files-found: warn
       #     retention-days: 90
-
-  release:
-    name: Release
-    runs-on: ubuntu-24.04
-    needs: [build, codeql, brakeman, rubocop, manifests, lint]
-    if: ${{ github.ref == 'refs/heads/main' }}
-    # if: ${{ github.event_name != 'pull_request' }}
-    steps:
-      - uses: googlecloudplatform/release-please-action@v4.1.3
-        with:
-          release-type: simple
-          package-name: release-please-action
