@@ -140,6 +140,7 @@ jobs:
       - uses: ruby/setup-ruby@v1.205.0
         with:
           ruby-version: 3.1
+          bundler-cache: true
       - run: |
           gem install brakeman --version $BRAKEMAN_VERSION
           brakeman --format sarif --output output.sarif.json .
@@ -165,6 +166,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.205.0
+        with:
+          ruby-version: 3.1
+          bundler-cache: true
       - run: |
           bundle add code-scanning-rubocop --skip-install
           bundle install
