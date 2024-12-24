@@ -76,7 +76,7 @@ jobs:
           registry: registry.hub.docker.com
           username: ${{ secrets.REGISTRY_NAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-      - uses: docker/login-action@v3.0.0
+      - uses: docker/login-action@v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -136,7 +136,7 @@ jobs:
           cache-to: type=registry,ref=registry.hub.docker.com/${{ secrets.REGISTRY_NAME }}/${{ env.PROJECT_NAME }}:buildcache,mode=max
           tags: ${{ steps.meta-dockerhub.outputs.tags }}
           labels: ${{ steps.meta-dockerhub.outputs.labels }}
-      - uses: docker/build-push-action@v5.1.0
+      - uses: docker/build-push-action@v6.10.0
         id: build-ghcr
         with:
           context: .
@@ -145,7 +145,7 @@ jobs:
           target: ${{ matrix.environment }}
           cache-from: type=registry,ref=ghcr.io/${{ env.PROJECT_NAME }}:buildcache
           cache-to: type=registry,ref=ghcr.io/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}:buildcache,mode=max
-          tags: ${{ steps.meta-dockerhub.outputs.tags }}
+          tags: ${{ steps.meta-ghcr.outputs.tags }}
           labels: ${{ steps.meta-ghcr.outputs.labels }}
       - run: echo ${{ steps.build-dockerhub.outputs.digest }}
       - run: echo ${{ steps.build-ghcr.outputs.digest }}
