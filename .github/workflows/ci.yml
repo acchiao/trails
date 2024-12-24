@@ -110,7 +110,7 @@ jobs:
         id: meta-ghcr
         with:
           images: |
-            gchr.io/${{ env.PROJECT_NAME }}
+            gchr.io/${{ github.actor }}/${{ env.PROJECT_NAME }}
           flavor: |
             latest=true
             prefix=
