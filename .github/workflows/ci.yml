@@ -12,7 +12,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -27,7 +27,7 @@ jobs:
 
   manifests:
     name: Manifests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -50,7 +50,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -106,7 +106,7 @@ jobs:
 
   codeql:
     name: CodeQL
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     # needs: [build]
     permissions:
       actions: read
@@ -128,7 +128,7 @@ jobs:
 
   brakeman:
     name: Brakeman
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: read
@@ -157,7 +157,7 @@ jobs:
 
   rubocop:
     name: RuboCop
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
     steps:
@@ -184,7 +184,7 @@ jobs:
 
   release:
     name: Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [build, codeql, brakeman, rubocop, manifests, lint]
     if: ${{ github.ref == 'refs/heads/main' }}
     # if: ${{ github.event_name != 'pull_request' }}
