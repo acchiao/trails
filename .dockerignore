@@ -1,6 +1,7 @@
 .git
 .github
 .dockerignore
+.secrets.baseline
 Dockerfile
 charts
 LICENSE
