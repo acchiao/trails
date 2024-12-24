@@ -7,12 +7,12 @@ require:
 AllCops:
   CacheRootDirectory: tmp
   Exclude:
-    - '.git/**/*'
-    - 'bin/**/*'
-    - 'db/schema.rb'
-    - 'node_modules/**/*'
-    - 'tmp/**/*'
-    - 'vendor/**/*'
+    - ".git/**/*"
+    - "bin/**/*"
+    - "db/schema.rb"
+    - "node_modules/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
   NewCops: enable
   SuggestExtensions: false
   TargetRailsVersion: 6.1
