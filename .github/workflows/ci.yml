@@ -101,7 +101,7 @@ jobs:
             type=sha,prefix=,suffix=,format=long
             type=sha,prefix=,suffix=,format=short
             type=raw,value=${{ matrix.environment }}
-      - uses: docker/build-push-action@v6.10.0
+      - uses: docker/build-push-action@v6.17.0
         id: build-dockerhub
         with:
           context: .
@@ -161,7 +161,7 @@ jobs:
             type=sha,prefix=,suffix=,format=long
             type=sha,prefix=,suffix=,format=short
             type=raw,value=${{ matrix.environment }}
-      - uses: docker/build-push-action@v6.10.0
+      - uses: docker/build-push-action@v6.17.0
         id: build-ghcr
         with:
           context: .
