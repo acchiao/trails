@@ -79,7 +79,7 @@ jobs:
           registry: registry.hub.docker.com
           username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
-      - uses: docker/metadata-action@v5.6.1
+      - uses: docker/metadata-action@v5.8.0
         id: meta-dockerhub
         with:
           images: |
@@ -139,7 +139,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@v5.6.1
+      - uses: docker/metadata-action@v5.8.0
         id: meta-ghcr
         with:
           images: |
