@@ -21,7 +21,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -36,7 +36,7 @@ jobs:
     name: Kubernetes
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: azure/setup-helm@v4.2.0
@@ -69,7 +69,7 @@ jobs:
     #   name: ${{ matrix.environment }}
     #   url: https://localhost:3000
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: docker/setup-qemu-action@v3.2.0
@@ -129,7 +129,7 @@ jobs:
     #   name: ${{ matrix.environment }}
     #   url: https://localhost:3000
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: docker/setup-qemu-action@v3.2.0
@@ -184,7 +184,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: github/codeql-action/init@v3
@@ -199,7 +199,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.205.0
@@ -227,7 +227,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.205.0
