@@ -2,23 +2,18 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   PROJECT_NAME: trails
 
 jobs:
   lint:
-    name: Lint
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.2.2
@@ -33,7 +28,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   kubernetes:
-    name: Kubernetes
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.2.2
@@ -55,7 +49,6 @@ jobs:
           helm template trails charts/trails --values charts/trails/ci.yaml --skip-tests | ./kube-score score - --output-format ci --kubernetes-version 1.32 --ignore-test deployment-has-poddisruptionbudget,deployment-has-host-podantiaffinity,container-security-context-user-group-id,pod-networkpolicy,pod-probes
 
   dockerhub:
-    name: DockerHub
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -65,9 +58,7 @@ jobs:
       fail-fast: false
       matrix:
         environment: [development, test, staging, production]
-    # environment:
-    #   name: ${{ matrix.environment }}
-    #   url: https://localhost:3000
+
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -115,7 +106,6 @@ jobs:
       - run: echo ${{ steps.build-dockerhub.outputs.digest }}
 
   ghcr:
-    name: GHCR
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -125,9 +115,6 @@ jobs:
       fail-fast: false
       matrix:
         environment: [development, test, staging, production]
-    # environment:
-    #   name: ${{ matrix.environment }}
-    #   url: https://localhost:3000
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -175,14 +162,11 @@ jobs:
       - run: echo ${{ steps.build-ghcr.outputs.digest }}
 
   codeql:
-    name: CodeQL
     runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: read
       security-events: write
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -192,7 +176,6 @@ jobs:
       - uses: github/codeql-action/analyze@v3
 
   brakeman:
-    name: Brakeman
     runs-on: ubuntu-24.04
     permissions:
       actions: read
@@ -211,21 +194,9 @@ jobs:
           brakeman --format sarif --output brakeman.sarif.json .
         env:
           BRAKEMAN_VERSION: 5.2.1
-      # - uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: brakeman.sarif.json
-      # - uses: actions/upload-artifact@v4.5.0
-      #   with:
-      #     name: brakeman.sarif.json
-      #     path: brakeman.sarif.json
-      #     if-no-files-found: warn
-      #     retention-days: 90
 
   rubocop:
-    name: RuboCop
     runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -242,12 +213,3 @@ jobs:
             bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o rubocop.sarif
             [[ $? -ne 2 ]]
           "
-      # - uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: rubocop.sarif
-      # - uses: actions/upload-artifact@v4.5.0
-      #   with:
-      #     name: rubocop.sarif
-      #     path: rubocop.sarif
-      #     if-no-files-found: warn
-      #     retention-days: 90

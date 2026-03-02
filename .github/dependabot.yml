@@ -1,22 +1,54 @@
 version: 2
+
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
-  - package-ecosystem: "docker"
-    directory: "/"
+      timezone: America/Los_Angeles
+      interval: daily
+      time: "09:00"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: build
+      include: scope
+    assignees:
+      - acchiao
+
+  - package-ecosystem: docker
+    directory: /
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
-  - package-ecosystem: "bundler"
-    directory: "/"
+      timezone: America/Los_Angeles
+      interval: daily
+      time: "09:00"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: build
+      include: scope
+    assignees:
+      - acchiao
+
+  - package-ecosystem: bundler
+    directory: /
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
-  - package-ecosystem: "npm"
-    directory: "/"
+      timezone: America/Los_Angeles
+      interval: daily
+      time: "09:00"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: build
+      include: scope
+    assignees:
+      - acchiao
+
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
+      timezone: America/Los_Angeles
+      interval: daily
+      time: "09:00"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: build
+      include: scope
+    assignees:
+      - acchiao
