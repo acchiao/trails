@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -30,7 +30,7 @@ jobs:
   kubernetes:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
       - uses: azure/setup-helm@v4.2.0
@@ -60,7 +60,7 @@ jobs:
         environment: [development, test, staging, production]
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
       - uses: docker/setup-qemu-action@v3.2.0
@@ -116,7 +116,7 @@ jobs:
       matrix:
         environment: [development, test, staging, production]
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
       - uses: docker/setup-qemu-action@v3.2.0
@@ -168,7 +168,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
       - uses: github/codeql-action/init@v3
@@ -182,7 +182,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.205.0
@@ -198,7 +198,7 @@ jobs:
   rubocop:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
         with:
           persist-credentials: false
       - uses: ruby/setup-ruby@v1.205.0
