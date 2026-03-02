@@ -11,8 +11,6 @@ updates:
     commit-message:
       prefix: build
       include: scope
-    assignees:
-      - acchiao
 
   - package-ecosystem: docker
     directory: /
@@ -24,8 +22,6 @@ updates:
     commit-message:
       prefix: build
       include: scope
-    assignees:
-      - acchiao
 
   - package-ecosystem: bundler
     directory: /
@@ -37,8 +33,6 @@ updates:
     commit-message:
       prefix: build
       include: scope
-    assignees:
-      - acchiao
 
   - package-ecosystem: npm
     directory: /
@@ -50,5 +44,3 @@ updates:
     commit-message:
       prefix: build
       include: scope
-    assignees:
-      - acchiao
