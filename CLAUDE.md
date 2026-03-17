@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Development
 
-- `bin/setup` — install deps (bundle + bun), prepare DB, start server
+- `bin/setup` — install deps (bundle + bun), prepare DB, clear logs, start dev server
+- `bin/setup --skip-server` — same as above but without starting the server (used by CI)
 - `bin/dev` — start dev server (Puma + JS/CSS watchers via Procfile.dev)
 - `bin/rails console` — open Rails console
 - `bin/rails db:prepare` — create/migrate the database
@@ -28,20 +29,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### CI
 
-- `bin/ci` — full CI pipeline: setup, rubocop, bundler-audit, brakeman, tests, seed check
+- `bin/ci` — local CI pipeline (sequential): setup, rubocop, bundler-audit, brakeman, tests, seed check
+- GitHub Actions (`.github/workflows/ci.yml`) runs 4 parallel jobs: `scan_ruby`, `lint`, `test`, `system-test`
+
+### Stimulus
+
+- `bin/rails generate stimulus controllerName` — generate a new Stimulus controller
+- `bin/rails stimulus:manifest:update` — regenerate `app/javascript/controllers/index.js` after adding controllers
 
 ## Architecture
 
-Rails 8.1 / Ruby 4.0.2 app using **PostgreSQL** for all databases. JavaScript bundled with **Bun** via jsbundling-rails (`bun.config.js`). CSS via **Tailwind CSS v4** through cssbundling-rails (`@tailwindcss/cli`). Assets served by **Propshaft**. Frontend uses **Hotwire** (Turbo + Stimulus). Background jobs, caching, and WebSockets use Solid adapters (Queue, Cache, Cable) backed by separate PostgreSQL databases. Deployment via **Kamal + Thruster**.
+Rails 8.1 / Ruby 4.0.2 app using **PostgreSQL** for all databases. JavaScript bundled with **Bun** (v1.3.10) via jsbundling-rails (`bun.config.js`). CSS via **Tailwind CSS v4** through cssbundling-rails (`@tailwindcss/cli`). Assets served by **Propshaft**. Frontend uses **Hotwire** (Turbo + Stimulus). Background jobs, caching, and WebSockets use Solid adapters (Queue, Cache, Cable) backed by separate PostgreSQL databases. Deployment via **Kamal + Thruster**.
 
 ### Key Architectural Details
 
 - **No importmap** — JS dependencies managed via `package.json` + `bun install`, bundled by `bun.config.js` into `app/assets/builds/`
+- **JS entrypoint**: `app/javascript/application.js` imports Turbo and Stimulus controllers
 - **Procfile.dev** runs three processes: Rails server, JS watcher (`bun run build --watch`), CSS watcher (`bun run build:css --watch`)
+- **Tailwind CSS v4** — single `@import "tailwindcss"` in `app/assets/stylesheets/application.tailwind.css`, no config file needed
 - **Production** uses 4 PostgreSQL databases: primary, cache, queue, cable (see `config/database.yml`)
 - **Solid Queue** runs inside Puma via `plugin :solid_queue` when `SOLID_QUEUE_IN_PUMA=true` (production default)
 - **No migrations yet** — `db/` only has Solid adapter schemas (`cache_schema.rb`, `queue_schema.rb`, `cable_schema.rb`) and seeds
-- **Stimulus controllers** live in `app/javascript/controllers/`, auto-registered via `controllers/index.js`
+- **Stimulus controllers** live in `app/javascript/controllers/`, auto-registered via `controllers/index.js` — run `bin/rails stimulus:manifest:update` after adding new controllers
 - **CI config** defined in `config/ci.rb` (used by `bin/ci`) and `.github/workflows/ci.yml`
 
 ### Conventions
@@ -51,3 +60,4 @@ Rails 8.1 / Ruby 4.0.2 app using **PostgreSQL** for all databases. JavaScript bu
 - **JS dependencies**: `bun install` / `bun add <package>` — not npm/yarn
 - **Active Storage** configured for local disk storage
 - **Dev Container** available via `.devcontainer/` (PostgreSQL + Selenium services)
+- **Kamal aliases**: `bin/kamal console`, `bin/kamal shell`, `bin/kamal logs`, `bin/kamal dbc` (remote DB console)
