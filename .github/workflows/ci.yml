@@ -56,7 +56,11 @@ jobs:
           - 6379:6379
         options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev libvips
+      - run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            libpq-dev \
+            libvips
       - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
@@ -88,7 +92,11 @@ jobs:
           - 6379:6379
         options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev libvips
+      - run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            libpq-dev \
+            libvips
       - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
