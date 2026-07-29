@@ -2,62 +2,35 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+Greenfield Rails scaffold: no application code, migrations, tests, or fixtures exist yet. `db/` holds an empty `schema.rb` plus the Solid adapter schemas (`cache_schema.rb`, `queue_schema.rb`, `cable_schema.rb`) and seeds.
+
 ## Common Commands
 
-### Development
-
-- `bin/setup` — install deps (bundle + bun), prepare DB, clear logs, start dev server
-- `bin/setup --skip-server` — same as above but without starting the server (used by CI)
-- `bin/dev` — start dev server (Puma + JS/CSS watchers via Procfile.dev)
-- `bin/rails console` — open Rails console
-- `bin/rails db:prepare` — create/migrate the database
-
-### Testing
-
-- `bin/rails test` — run all unit/integration tests
-- `bin/rails test test/models/foo_test.rb` — run a single test file
-- `bin/rails test test/models/foo_test.rb:42` — run a single test by line number
-- `bin/rails test:system` — run system tests (Capybara + Selenium)
-- `bin/rails db:test:prepare` — required before first test run
-
-### Linting & Security
-
-- `bin/rubocop` — lint Ruby (rubocop-rails-omakase style)
-- `bin/rubocop -a` — auto-correct lint violations
-- `bin/brakeman --quiet --no-pager` — static security analysis
-- `bin/bundler-audit` — audit gems for known vulnerabilities
-
-### CI
-
-- `bin/ci` — local CI pipeline (sequential): setup, rubocop, bundler-audit, brakeman, tests, seed check
-- GitHub Actions (`.github/workflows/ci.yml`) runs 4 parallel jobs: `scan_ruby`, `lint`, `test`, `system-test`
-
-### Stimulus
-
-- `bin/rails generate stimulus controllerName` — generate a new Stimulus controller
-- `bin/rails stimulus:manifest:update` — regenerate `app/javascript/controllers/index.js` after adding controllers
+- `bin/setup` - install deps (bundle + bun), prepare DB, start dev server; `--skip-server` skips the server (used by `bin/ci` and the devcontainer, not GitHub Actions), `--reset` also runs `db:reset`
+- `bin/dev` - start dev server (Puma + JS/CSS watchers via Procfile.dev); auto-installs the `foreman` gem if missing
+- `bin/rails test` / `bin/rails test:system` - unit/integration tests / system tests (Capybara + Selenium)
+- `bin/rubocop` - lint Ruby (rubocop-rails-omakase); the only linter/formatter in the repo - JS/CSS/ERB have none
+- `bin/brakeman --quiet --no-pager` - static security analysis; the binstub adds `--ensure-latest`, so a stale brakeman gem fails the run (update the gem - it is not a real finding)
+- `bin/bundler-audit` - audit gems for known vulnerabilities
+- `bin/jobs` - run Solid Queue workers outside Puma
+- `bin/ci` - local CI pipeline; skips system tests (commented out in `config/ci.rb`) and is stricter than GitHub CI: brakeman warnings fail here, bundler-audit is allowed to fail on GitHub
+- GitHub Actions (`.github/workflows/ci.yml`) runs 4 parallel jobs: `audit`, `lint`, `test`, `system-test`
+- `bin/rails stimulus:manifest:update` - regenerate `app/javascript/controllers/index.js` after adding Stimulus controllers
 
 ## Architecture
 
-Rails 8.1 / Ruby 4.0.2 app using **PostgreSQL** for all databases. JavaScript bundled with **Bun** (v1.3.10) via jsbundling-rails (`bun.config.js`). CSS via **Tailwind CSS v4** through cssbundling-rails (`@tailwindcss/cli`). Assets served by **Propshaft**. Frontend uses **Hotwire** (Turbo + Stimulus). Background jobs, caching, and WebSockets use Solid adapters (Queue, Cache, Cable) backed by separate PostgreSQL databases. Deployment via **Kamal + Thruster**.
+Rails 8.1 / Ruby 4.0.2 app using **PostgreSQL**. JavaScript bundled with **Bun** via jsbundling-rails (`bun.config.js`). CSS via **Tailwind CSS v4** through cssbundling-rails. Assets served by **Propshaft**. Frontend uses **Hotwire** (Turbo + Stimulus). Deployment via **Kamal + Thruster**, but `config/deploy.yml` is still unconfigured generator scaffold (placeholder server IP and registry).
 
-### Key Architectural Details
+- **Solid adapters are production-only.** Production uses 4 PostgreSQL databases (primary, cache, queue, cable) with Solid Queue/Cache/Cable. Development and test use a single database each with the default async job adapter, memory/null cache store, and async cable - jobs and caching behave differently locally.
+- **Solid Queue** runs inside Puma via `plugin :solid_queue` when `SOLID_QUEUE_IN_PUMA` is set (production default)
+- **No importmap** - JS deps managed via `package.json` + `bun install` / `bun add` (not npm/yarn), bundled into `app/assets/builds/`
+- **Active Storage** uses local disk (`:test` service in test) and needs **libvips** for image variants: `brew install vips` on macOS; CI and the Dockerfile install `libvips`
+- **`DB_HOST` env var** switches `config/database.yml` to TCP with `postgres`/`postgres` credentials (the devcontainer sets it); unset means local socket
+- **System tests** switch to remote Selenium when `CAPYBARA_SERVER_PORT` + `SELENIUM_HOST` are set (the devcontainer sets them)
 
-- **No importmap** — JS dependencies managed via `package.json` + `bun install`, bundled by `bun.config.js` into `app/assets/builds/`
-- **JS entrypoint**: `app/javascript/application.js` imports Turbo and Stimulus controllers
-- **Procfile.dev** runs three processes: Rails server, JS watcher (`bun run build --watch`), CSS watcher (`bun run build:css --watch`)
-- **Tailwind CSS v4** — single `@import "tailwindcss"` in `app/assets/stylesheets/application.tailwind.css`, no config file needed
-- **Production** uses 4 PostgreSQL databases: primary, cache, queue, cable (see `config/database.yml`)
-- **Solid Queue** runs inside Puma via `plugin :solid_queue` when `SOLID_QUEUE_IN_PUMA=true` (production default)
-- **No migrations yet** — `db/` only has Solid adapter schemas (`cache_schema.rb`, `queue_schema.rb`, `cable_schema.rb`) and seeds
-- **Stimulus controllers** live in `app/javascript/controllers/`, auto-registered via `controllers/index.js` — run `bin/rails stimulus:manifest:update` after adding new controllers
-- **CI config** defined in `config/ci.rb` (used by `bin/ci`) and `.github/workflows/ci.yml`
+## Conventions
 
-### Conventions
-
-- **Linting**: rubocop-rails-omakase (Rails' opinionated style guide)
+- **Commits**: Conventional Commits (`feat:`, `fix:`, `ci:`, ...)
 - **Testing**: Minitest with fixtures (not factories), parallel execution via `parallelize(workers: :number_of_processors)`
-- **JS dependencies**: `bun install` / `bun add <package>` — not npm/yarn
-- **Active Storage** configured for local disk storage
-- **Dev Container** available via `.devcontainer/` (PostgreSQL + Selenium services)
-- **Kamal aliases**: `bin/kamal console`, `bin/kamal shell`, `bin/kamal logs`, `bin/kamal dbc` (remote DB console)
+- **Generators do not auto-correct style** (`apply_rubocop_autocorrect_after_generate!` is commented out) - run `bin/rubocop -a` after `bin/rails generate`
+- **Bundler 4 with lockfile checksums** - modifying gems with an older Bundler strips the `sha256` checksums from `Gemfile.lock`
