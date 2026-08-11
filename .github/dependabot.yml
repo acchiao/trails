@@ -70,6 +70,23 @@ updates:
           - minor
           - patch
 
+  - package-ecosystem: docker-compose
+    directory: /.devcontainer
+    schedule:
+      interval: daily
+      time: "09:00"
+      timezone: America/Los_Angeles
+    commit-message:
+      prefix: build
+      include: scope
+    open-pull-requests-limit: 20
+    groups:
+      docker-compose:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
   - package-ecosystem: devcontainers
     directory: /.devcontainer
     schedule:
