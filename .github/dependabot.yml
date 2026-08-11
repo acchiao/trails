@@ -10,6 +10,12 @@ updates:
       prefix: build
       include: scope
     open-pull-requests-limit: 20
+    groups:
+      bundler:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: npm
     directory: /
@@ -21,6 +27,12 @@ updates:
       prefix: build
       include: scope
     open-pull-requests-limit: 20
+    groups:
+      npm:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: github-actions
     directory: /
@@ -32,3 +44,45 @@ updates:
       prefix: build
       include: scope
     open-pull-requests-limit: 20
+    groups:
+      github-actions:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: docker
+    directories:
+      - /
+      - /.devcontainer
+    schedule:
+      interval: daily
+      time: "09:00"
+      timezone: America/Los_Angeles
+    commit-message:
+      prefix: build
+      include: scope
+    open-pull-requests-limit: 20
+    groups:
+      docker:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: devcontainers
+    directory: /.devcontainer
+    schedule:
+      interval: daily
+      time: "09:00"
+      timezone: America/Los_Angeles
+    commit-message:
+      prefix: build
+      include: scope
+    open-pull-requests-limit: 20
+    groups:
+      devcontainers:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
