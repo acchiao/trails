@@ -19,7 +19,7 @@ Greenfield Rails scaffold: no application code, migrations, tests, or fixtures e
 
 ## Architecture
 
-Rails 8.1 / Ruby 4.0.2 app using **PostgreSQL**. JavaScript bundled with **Bun** via jsbundling-rails (`bun.config.js`). CSS via **Tailwind CSS v4** through cssbundling-rails. Assets served by **Propshaft**. Frontend uses **Hotwire** (Turbo + Stimulus). Deployment via **Kamal + Thruster**, but `config/deploy.yml` is still unconfigured generator scaffold (placeholder server IP and registry).
+Rails 8.1 / Ruby 4.0.10 app using **PostgreSQL**. JavaScript bundled with **Bun** via jsbundling-rails (`bun.config.js`). CSS via **Tailwind CSS v4** through cssbundling-rails. Assets served by **Propshaft**. Frontend uses **Hotwire** (Turbo + Stimulus). Deployment via **Kamal + Thruster**, but `config/deploy.yml` is still unconfigured generator scaffold (placeholder server IP and registry).
 
 - **Solid adapters are production-only.** Production uses 4 PostgreSQL databases (primary, cache, queue, cable) with Solid Queue/Cache/Cable. Development and test use a single database each with the default async job adapter, memory/null cache store, and async cable - jobs and caching behave differently locally.
 - **Solid Queue** runs inside Puma via `plugin :solid_queue` when `SOLID_QUEUE_IN_PUMA` is set (production default)
